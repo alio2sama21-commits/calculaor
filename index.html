@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator App</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      padding: 20px;
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #4f46e5;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      margin-top: 10px;
+    }
+
+    .secondary:hover {
+      background: #d1d5db;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 10px;
+      background: #f3f4f6;
+      color: #111827;
+      font-size: 18px;
+      text-align: center;
+      min-height: 55px;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>Calculator App</h1>
+    <p class="subtitle">Web version of your C++ calculator</p>
+
+    <label for="number1">First number</label>
+    <input id="number1" type="number" step="any" placeholder="Enter first number" />
+
+    <label for="number2">Second number</label>
+    <input id="number2" type="number" step="any" placeholder="Enter second number" />
+
+    <label for="operation">Choose your process</label>
+    <select id="operation">
+      <option value="">Select an operation</option>
+      <option value="add">1) Sum</option>
+      <option value="multiply">2) Multiply</option>
+      <option value="subtract">3) Subtract</option>
+      <option value="divide">4) Divide</option>
+    </select>
+
+    <button onclick="calculate()">Calculate</button>
+    <button class="secondary" onclick="resetCalculator()">Calculate Again</button>
+
+    <div id="result" class="result">The result will appear here.</div>
+  </div>
+
+  <script>
+    function add(number1, number2) {
+      return number1 + number2;
+    }
+
+    function product(number1, number2) {
+      return number1 * number2;
+    }
+
+    function subtract(number1, number2) {
+      return number1 - number2;
+    }
+
+    function divided(number1, number2) {
+      if (number2 === 0) {
+        throw new Error("Division by zero is not allowed!");
+      }
+      return number1 / number2;
+    }
+
+    function calculate() {
+      const firstInput = document.getElementById("number1");
+      const secondInput = document.getElementById("number2");
+      const operation = document.getElementById("operation").value;
+      const resultBox = document.getElementById("result");
+
+      const n1 = Number(firstInput.value);
+      const n2 = Number(secondInput.value);
+
+      resultBox.className = "result";
+
+      if (firstInput.value.trim() === "" || Number.isNaN(n1)) {
+        resultBox.textContent = "Invalid input. Please enter a valid first number.";
+        resultBox.classList.add("error");
+        return;
+      }
+
+      if (secondInput.value.trim() === "" || Number.isNaN(n2)) {
+        resultBox.textContent = "Invalid input. Please enter a valid second number.";
+        resultBox.classList.add("error");
+        return;
+      }
+
+      if (!operation) {
+        resultBox.textContent = "Please choose a valid process.";
+        resultBox.classList.add("error");
+        return;
+      }
+
+      try {
+        let result;
+
+        switch (operation) {
+          case "add":
+            result = add(n1, n2);
+            break;
+          case "multiply":
+            result = product(n1, n2);
+            break;
+          case "subtract":
+            result = subtract(n1, n2);
+            break;
+          case "divide":
+            result = divided(n1, n2);
+            break;
+        }
+
+        resultBox.textContent = `The result is: ${result}`;
+        resultBox.classList.add("success");
+      } catch (error) {
+        resultBox.textContent = `Error: ${error.message}`;
+        resultBox.classList.add("error");
+      }
+    }
+
+    function resetCalculator() {
+      document.getElementById("number1").value = "";
+      document.getElementById("number2").value = "";
+      document.getElementById("operation").value = "";
+
+      const resultBox = document.getElementById("result");
+      resultBox.textContent = "The result will appear here.";
+      resultBox.className = "result";
+
+      document.getElementById("number1").focus();
+    }
+  </script>
+</body>
+</html>
